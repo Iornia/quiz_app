@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>考試準備練習應用</title>
+    <style>
+        body {
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+            color: #333;
+        }
+        h1, h2 {
+            color: #2c3e50;
+        }
+        .container {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .question-container {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .options {
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+        .option {
+            display: block;
+            padding: 10px;
+            margin: 8px 0;
+            background-color: #f1f1f1;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .option:hover {
+            background-color: #e1e1e1;
+        }
+        .selected {
+            background-color: #d4edda;
+        }
+        .correct {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .incorrect {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .explanation {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #e8f4f8;
+            border-radius: 4px;
+            display: none;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .secondary-button {
+            background-color: #6c757d;
+        }
+        .secondary-button:hover {
+            background-color: #5a6268;
+        }
+        .progress-container {
+            margin-top: 20px;
+        }
+        .progress-bar {
+            height: 20px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+        .progress {
+            height: 100%;
+            background-color: #4CAF50;
+            text-align: center;
+            line-height: 20px;
+            color: white;
+            transition: width 0.5s;
+        }
+        .settings {
+            margin-top: 20px;
+        }
+        .question-list {
+            margin-top: 20px;
+            display: none;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #f1f1f1;
+            border-radius: 4px 4px 0 0;
+            margin-right: 5px;
+        }
+        .tab.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .file-input {
+            margin-bottom: 20px;
+        }
+        .hidden {
+            display: none;
+        }
+        #questionNumber {
+            font-weight: bold;
+            color: #4CAF50;
+        }
+        .chapter-info {
+            background-color: #eaf2f8;
+            padding: 5px 10px;
+            border-radius: 4px;
+            color: #3498db;
+            display: inline-block;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        #statsPanel {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        .stat-box {
+            background-color: #e8f4f8;
+            padding: 10px;
+            border-radius: 4px;
+            flex: 1;
+            margin: 0 5px;
+            text-align: center;
+        }
+        .stat-box .value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <h1>考試準備練習應用</h1>
+    
+    <div class="tabs">
+        <div class="tab active" data-tab="quiz">練習模式</div>
+        <div class="tab" data-tab="settings">設置</div>
+        <div class="tab" data-tab="stats">統計</div>
+    </div>
+    
+    <div id="quizTab" class="tab-content active">
+        <div id="statsPanel">
+            <div class="stat-box">
+                <div>答對率</div>
+                <div class="value" id="correctRate">0%</div>
+            </div>
+            <div class="stat-box">
+                <div>已完成題目</div>
+                <div class="value" id="completedQuestions">0/0</div>
+            </div>
+            <div class="stat-box">
+                <div>總進度</div>
+                <div class="value" id="totalProgress">0%</div>
+            </div>
+        </div>
+
+        <div class="container">
+            <p>從題庫中隨機選擇題目。您可以在設置頁面中上傳自己的題庫文件。</p>
+            <div id="progressContainer" class="progress-container">
+                <h3>學習進度</h3>
+                <div class="progress-bar">
+                    <div id="progressBar" class="progress" style="width: 0%">0%</div>
+                </div>
+            </div>
+            <button id="startBtn">開始練習</button>
+            <button id="nextBtn" style="display: none;">下一題</button>
+        </div>
+
+        <div id="questionContainer" class="question-container" style="display: none;">
+            <h2>題目 <span id="questionNumber">1</span></h2>
+            <p id="chapterInfo" class="chapter-info"></p>
+            <p id="questionText"></p>
+            <div id="options" class="options"></div>
+            <button id="checkBtn">檢查答案</button>
+            <div id="explanation" class="explanation"></div>
+        </div>
+    </div>
+    
+    <div id="settingsTab" class="tab-content">
+        <div class="container">
+            <h2>設置</h2>
+            <div class="settings">
+                <h3>上傳題庫</h3>
+                <p>上傳JSON格式的題庫檔案。格式應為：</p>
+                <pre style="background: #f4f4f4; padding: 10px; border-radius: 4px; overflow-x: auto;">
+[
+  {
+    "question": "問題文字",
+    "options": ["選項A", "選項B", "選項C", "選項D"],
+    "answer": 0,  // 正確答案的索引（0代表選項A）
+    "explanation": "詳細解釋",
+    "chapter": "章節名稱"  // 新增章節欄位
+  },
+  // 更多題目...
+]</pre>
+                <div class="file-input">
+                    <input type="file" id="fileInput" accept=".json">
+                    <button id="uploadBtn">上傳</button>
+                </div>
+                
+                <h3>練習設置</h3>
+                <label for="requiredCorrect">每個題目需要答對次數：</label>
+                <input type="number" id="requiredCorrect" min="1" value="3" style="width: 60px;">
+                
+                <h3>示範題庫</h3>
+                <button id="loadDemoBtn">載入示範題庫</button>
+                <p>點擊此按鈕載入一個示範題庫，您可以立即開始練習。</p>
+            </div>
+        </div>
+    </div>
+    
+    <div id="statsTab" class="tab-content">
+        <div class="container">
+            <h2>統計和進度</h2>
+            <button id="showQuestionListBtn">查看所有題目進度</button>
+            <div id="questionList" class="question-list">
+                <table id="questionTable">
+                    <thead>
+                        <tr>
+                            <th>題號</th>
+                            <th>章節</th>
+                            <th>題目</th>
+                            <th>答對次數</th>
+                            <th>回答次數</th>
+                            <th>答對率</th>
+                            <th>進度</th>
+                        </tr>
+                    </thead>
+                    <tbody id="questionTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 全局變數
+        let questions = [];
+        let currentQuestion = null;
+        let currentQuestionIndex = 0;
+        let selectedOption = null;
+        let userProgress = [];
+        let requiredCorrect = 3;
+        
+        // DOM 元素
+        const startBtn = document.getElementById('startBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const checkBtn = document.getElementById('checkBtn');
+        const questionContainer = document.getElementById('questionContainer');
+        const questionText = document.getElementById('questionText');
+        const optionsContainer = document.getElementById('options');
+        const explanationContainer = document.getElementById('explanation');
+        const progressBar = document.getElementById('progressBar');
+        const requiredCorrectInput = document.getElementById('requiredCorrect');
+        const fileInput = document.getElementById('fileInput');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const loadDemoBtn = document.getElementById('loadDemoBtn');
+        const showQuestionListBtn = document.getElementById('showQuestionListBtn');
+        const questionList = document.getElementById('questionList');
+        const questionTableBody = document.getElementById('questionTableBody');
+        const questionNumberSpan = document.getElementById('questionNumber');
+        const correctRateElement = document.getElementById('correctRate');
+        const completedQuestionsElement = document.getElementById('completedQuestions');
+        const totalProgressElement = document.getElementById('totalProgress');
+        
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            // 檢查本地存儲
+            loadFromLocalStorage();
+            
+            // 標籤切換
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    const tabContents = document.querySelectorAll('.tab-content');
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    const tabId = tab.dataset.tab + 'Tab';
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // 設置監聽器
+            startBtn.addEventListener('click', startQuiz);
+            nextBtn.addEventListener('click', nextQuestion);
+            checkBtn.addEventListener('click', checkAnswer);
+            requiredCorrectInput.addEventListener('change', updateRequiredCorrect);
+            uploadBtn.addEventListener('click', uploadQuestions);
+            loadDemoBtn.addEventListener('click', loadDemoQuestions);
+            showQuestionListBtn.addEventListener('click', toggleQuestionList);
+            
+            updateProgressDisplay();
+        });
+        
+        // 載入本地存儲
+        function loadFromLocalStorage() {
+            const savedQuestions = localStorage.getItem('quizQuestions');
+            const savedProgress = localStorage.getItem('quizProgress');
+            const savedRequiredCorrect = localStorage.getItem('quizRequiredCorrect');
+            
+            if (savedQuestions) {
+                questions = JSON.parse(savedQuestions);
+            }
+            
+            if (savedProgress) {
+                userProgress = JSON.parse(savedProgress);
+            }
+            
+            if (savedRequiredCorrect) {
+                requiredCorrect = parseInt(savedRequiredCorrect);
+                requiredCorrectInput.value = requiredCorrect;
+            }
+        }
+        
+        // 保存到本地存儲
+        function saveToLocalStorage() {
+            localStorage.setItem('quizQuestions', JSON.stringify(questions));
+            localStorage.setItem('quizProgress', JSON.stringify(userProgress));
+            localStorage.setItem('quizRequiredCorrect', requiredCorrect.toString());
+        }
+        
+        // 開始測驗
+        function startQuiz() {
+            if (questions.length === 0) {
+                alert('請先上傳題庫或載入示範題庫！');
+                return;
+            }
+            
+            initializeProgress();
+            startBtn.style.display = 'none';
+            nextBtn.style.display = 'inline-block';
+            questionContainer.style.display = 'block';
+            
+            // 選擇第一個問題
+            nextQuestion();
+        }
+        
+        // 初始化進度
+        function initializeProgress() {
+            if (userProgress.length === 0) {
+                userProgress = questions.map(() => ({ correct: 0, attempts: 0 }));
+                saveToLocalStorage();
+            }
+        }
+        
+        // 下一個問題
+        function nextQuestion() {
+            // 重置界面
+            questionContainer.style.display = 'block';
+            explanationContainer.style.display = 'none';
+            nextBtn.style.display = 'none';
+            checkBtn.style.display = 'inline-block';
+            selectedOption = null;
+            
+            // 根據進度選擇優先需要練習的題目
+            currentQuestionIndex = selectNextQuestionIndex();
+            currentQuestion = questions[currentQuestionIndex];
+            
+            // 更新界面
+            questionNumberSpan.textContent = (currentQuestionIndex + 1);
+            questionText.textContent = currentQuestion.question;
+            
+            // 顯示章節資訊
+            const chapterInfo = document.getElementById('chapterInfo');
+            if (currentQuestion.chapter) {
+                chapterInfo.textContent = `章節：${currentQuestion.chapter}`;
+                chapterInfo.style.display = 'inline-block';
+            } else {
+                chapterInfo.style.display = 'none';
+            }
+            
+            // 創建選項
+            optionsContainer.innerHTML = '';
+            currentQuestion.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option';
+                optionElement.textContent = option;
+                optionElement.dataset.index = index;
+                
+                optionElement.addEventListener('click', () => {
+                    document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+                    optionElement.classList.add('selected');
+                    selectedOption = index;
+                });
+                
+                optionsContainer.appendChild(optionElement);
+            });
+        }
+        
+        // 選擇下一個問題索引
+        function selectNextQuestionIndex() {
+            // 優先選擇未達到目標答對次數的題目
+            const incompleteQuestions = userProgress
+                .map((progress, index) => ({ index, progress }))
+                .filter(item => item.progress.correct < requiredCorrect);
+            
+            if (incompleteQuestions.length > 0) {
+                // 隨機選擇一個未完成的題目，但優先選擇正確率較低的
+                incompleteQuestions.sort((a, b) => {
+                    const rateA = a.progress.attempts > 0 ? a.progress.correct / a.progress.attempts : 0;
+                    const rateB = b.progress.attempts > 0 ? b.progress.correct / b.progress.attempts : 0;
+                    return rateA - rateB;
+                });
+                
+                // 從前 40% 的低正確率題目中隨機選擇
+                const topLowRateCount = Math.max(1, Math.floor(incompleteQuestions.length * 0.4));
+                const randomIndex = Math.floor(Math.random() * topLowRateCount);
+                return incompleteQuestions[randomIndex].index;
+            } else {
+                // 如果所有題目都達到目標，則隨機選擇
+                return Math.floor(Math.random() * questions.length);
+            }
+        }
+        
+        // 檢查答案
+        function checkAnswer() {
+            if (selectedOption === null) {
+                alert('請選擇一個答案！');
+                return;
+            }
+            
+            // 更新進度
+            userProgress[currentQuestionIndex].attempts++;
+            if (selectedOption === currentQuestion.answer) {
+                userProgress[currentQuestionIndex].correct++;
+            }
+            saveToLocalStorage();
+            
+            // 顯示正確/錯誤
+            const options = document.querySelectorAll('.option');
+            options.forEach((option, index) => {
+                if (index === currentQuestion.answer) {
+                    option.classList.add('correct');
+                } else if (index === selectedOption && selectedOption !== currentQuestion.answer) {
+                    option.classList.add('incorrect');
+                }
+            });
+            
+            // 顯示解釋
+            explanationContainer.textContent = currentQuestion.explanation;
+            explanationContainer.style.display = 'block';
+            
+            // 更新界面
+            checkBtn.style.display = 'none';
+            nextBtn.style.display = 'inline-block';
+            
+            // 更新進度顯示
+            updateProgressDisplay();
+        }
+        
+        // 更新進度顯示
+        function updateProgressDisplay() {
+            if (userProgress.length === 0 || questions.length === 0) return;
+            
+            // 計算總進度
+            const totalCompleted = userProgress.filter(p => p.correct >= requiredCorrect).length;
+            const progressPercentage = (totalCompleted / questions.length) * 100;
+            
+            // 更新進度條
+            progressBar.style.width = `${progressPercentage}%`;
+            progressBar.textContent = `${progressPercentage.toFixed(1)}%`;
+            
+            // 更新統計面板
+            const totalAttempts = userProgress.reduce((sum, p) => sum + p.attempts, 0);
+            const totalCorrect = userProgress.reduce((sum, p) => sum + p.correct, 0);
+            const correctRate = totalAttempts > 0 ? (totalCorrect / totalAttempts) * 100 : 0;
+            
+            correctRateElement.textContent = `${correctRate.toFixed(1)}%`;
+            completedQuestionsElement.textContent = `${totalCompleted}/${questions.length}`;
+            totalProgressElement.textContent = `${progressPercentage.toFixed(1)}%`;
+            
+            // 更新題目清單（如果可見）
+            if (questionList.style.display !== 'none') {
+                updateQuestionTable();
+            }
+        }
+        
+        // 更新需要的正確次數
+        function updateRequiredCorrect() {
+            requiredCorrect = parseInt(requiredCorrectInput.value);
+            if (requiredCorrect < 1) {
+                requiredCorrect = 1;
+                requiredCorrectInput.value = 1;
+            }
+            saveToLocalStorage();
+            updateProgressDisplay();
+        }
+        
+        // 上傳題庫
+        function uploadQuestions() {
+            const file = fileInput.files[0];
+            if (!file) {
+                alert('請選擇檔案！');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const uploadedQuestions = JSON.parse(e.target.result);
+                    if (validateQuestions(uploadedQuestions)) {
+                        questions = uploadedQuestions;
+                        userProgress = []; // 重置進度
+                        saveToLocalStorage();
+                        alert('題庫上傳成功！');
+                        updateProgressDisplay();
+                    } else {
+                        alert('題庫格式不正確！請確保每個題目都有問題、選項、答案和解釋。');
+                    }
+                } catch (error) {
+                    alert('解析JSON時出錯：' + error.message);
+                }
+            };
+            reader.readAsText(file);
+        }
+        
+        // 驗證題目格式
+        function validateQuestions(questions) {
+            if (!Array.isArray(questions) || questions.length === 0) return false;
+            
+            return questions.every(q => 
+                q.question && 
+                Array.isArray(q.options) && 
+                q.options.length > 0 && 
+                typeof q.answer === 'number' && 
+                q.explanation
+                // chapter字段是可選的，不需要驗證
+            );
+        }
+        
+        // 載入示範題庫
+        function loadDemoQuestions() {
+            questions = [
+                {
+                    question: "在JavaScript中，哪個方法可以將字符串轉換為數字？",
+                    options: ["parseInt()", "toString()", "charAt()", "concat()"],
+                    answer: 0,
+                    explanation: "parseInt()是JavaScript中將字符串轉換為整數的方法。例如：parseInt('42')會返回數字42。",
+                    chapter: "JavaScript基礎"
+                },
+                {
+                    question: "CSS中，哪個屬性用於更改文字顏色？",
+                    options: ["text-color", "font-color", "color", "foreground-color"],
+                    answer: 2,
+                    explanation: "在CSS中，'color'屬性用於設置文字的颜色。例如：color: blue;",
+                    chapter: "CSS樣式"
+                },
+                {
+                    question: "HTML中，哪個標籤用於創建無序列表？",
+                    options: ["<ol>", "<li>", "<ul>", "<list>"],
+                    answer: 2,
+                    explanation: "<ul>標籤用於創建無序列表，而<li>標籤用於定義列表項目，<ol>用於有序列表。",
+                    chapter: "HTML基礎"
+                },
+                {
+                    question: "在Python中，哪個函數用於獲取字符串的長度？",
+                    options: ["count()", "length()", "len()", "size()"],
+                    answer: 2,
+                    explanation: "在Python中，len()函數用於返回對象（如字符串、列表等）的長度。例如：len('hello')返回5。",
+                    chapter: "Python基礎"
+                },
+                {
+                    question: "在關係數據庫中，哪個SQL語句用於從數據庫中檢索數據？",
+                    options: ["GET", "EXTRACT", "SELECT", "FIND"],
+                    answer: 2,
+                    explanation: "SELECT語句用於從數據庫表中檢索數據。基本語法是：SELECT 列名 FROM 表名。",
+                    chapter: "資料庫基礎"
+                },
+                {
+                    question: "HTTP協議中，哪個狀態碼表示「找不到請求的資源」？",
+                    options: ["200", "404", "500", "302"],
+                    answer: 1,
+                    explanation: "404狀態碼表示「Not Found」，即服務器找不到請求的資源。",
+                    chapter: "網路通訊"
+                },
+                {
+                    question: "在前端開發中，哪個不是JavaScript框架或庫？",
+                    options: ["React", "Angular", "Django", "Vue"],
+                    answer: 2,
+                    explanation: "Django是Python的Web框架，而不是JavaScript框架。React、Angular和Vue都是流行的JavaScript框架或庫。",
+                    chapter: "前端框架"
+                },
+                {
+                    question: "在Git版本控制系統中，哪個命令用於將更改添加到暫存區？",
+                    options: ["git commit", "git push", "git add", "git merge"],
+                    answer: 2,
+                    explanation: "git add命令用於將工作目錄中的更改添加到Git的暫存區（索引）。這是提交更改前的準備步驟。",
+                    chapter: "版本控制"
+                },
+                {
+                    question: "在網絡安全中，哪種攻擊試圖通過發送大量請求來使服務無法使用？",
+                    options: ["SQL注入", "跨站腳本攻擊(XSS)", "中間人攻擊", "分散式拒絕服務攻擊(DDoS)"],
+                    answer: 3,
+                    explanation: "分散式拒絕服務(DDoS)攻擊通過使用多個來源向目標系統發送大量請求，試圖使其超載並無法為正常用戶提供服務。",
+                    chapter: "網路安全"
+                },
+                {
+                    question: "在數據結構中，哪種結構遵循「後進先出」(LIFO)原則？",
+                    options: ["隊列(Queue)", "堆(Heap)", "堆棧(Stack)", "樹(Tree)"],
+                    answer: 2,
+                    explanation: "堆棧(Stack)是一個遵循後進先出(LIFO)原則的數據結構。新添加的元素會在頂部，並且只能從頂部移除元素。",
+                    chapter: "資料結構"
+                }
+            ];
+            
+            userProgress = []; // 重置進度
+            saveToLocalStorage();
+            alert('示範題庫已載入！');
+            updateProgressDisplay();
+        }
+        
+        // 切換問題列表顯示
+        function toggleQuestionList() {
+            if (questionList.style.display === 'none' || questionList.style.display === '') {
+                questionList.style.display = 'block';
+                updateQuestionTable();
+                showQuestionListBtn.textContent = '隱藏題目進度';
+            } else {
+                questionList.style.display = 'none';
+                showQuestionListBtn.textContent = '查看所有題目進度';
+            }
+        }
+        
+        // 更新問題表格
+        function updateQuestionTable() {
+            questionTableBody.innerHTML = '';
+            
+            questions.forEach((question, index) => {
+                const progress = userProgress[index] || { correct: 0, attempts: 0 };
+                const row = document.createElement('tr');
+                
+                const correctRate = progress.attempts > 0 ? (progress.correct / progress.attempts) * 100 : 0;
+                const completionRate = Math.min(100, (progress.correct / requiredCorrect) * 100);
+                
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${question.chapter || '未分類'}</td>
+                    <td>${question.question.length > 30 ? question.question.substring(0, 30) + '...' : question.question}</td>
+                    <td>${progress.correct}</td>
+                    <td>${progress.attempts}</td>
+                    <td>${correctRate.toFixed(1)}%</td>
+                    <td>
+                        <div class="progress-bar" style="margin-bottom: 0;">
+                            <div class="progress" style="width: ${completionRate}%; background-color: ${progress.correct >= requiredCorrect ? '#4CAF50' : '#FFC107'};">
+                                ${completionRate.toFixed(0)}%
+                            </div>
+                        </div>
+                    </td>
+                `;
+                
+                questionTableBody.appendChild(row);
+            });
+        }
+    </script>
+</body>
+</html>
