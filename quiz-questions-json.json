@@ -608,7 +608,8 @@
       "It can be easily weighted based on data point distances."
     ],
     "answer": 2,
-    "explanation": "中位數在摘要資料時的主要優勢是它對極端值或異常值具有魯棒性，也就是說，就算資料中有離群值，中位數也不太會受到影響。相較之下，平均數會因為極端大或小的值而產生偏移。\n\n選項解析：\n- A 錯誤：中位數不一定比平均數大，小、相等都有可能，取決於資料分佈。\n- B 錯誤：「考慮精確數值」這是平均數的特性，不是中位數。\n- C 正確：中位數是排序後的中間值，對極端值不敏感。\n- D 錯誤：「根據距離加權」這不是中位數的特性，這種說法比較接近加權平均。"
+    "explanation": "中位數在摘要資料時的主要優勢是它對極端值或異常值具有魯棒性，也就是說，就算資料中有離群值，中位數也不太會受到影響。相較之下，平均數會因為極端大或小的值而產生偏移。\n\n選項解析：\n- A 錯誤：中位數不一定比平均數大，小、相等都有可能，取決於資料分佈。\n- B 錯誤：「考慮精確數值」這是平均數的特性，不是中位數。\n- C 正確：中位數是排序後的中間值，對極端值不敏感。\n- D 錯誤：「根據距離加權」這不是中位數的特性，這種說法比較接近加權平均。",
+    "chapter": "Regression"
   },
   {
     "question": "In the context of building a k-NN regression model using sklearn, which of the following statements is correct?",
@@ -619,7 +620,8 @@
       "The KNeighborsClassifier is used instead of KNeighborsRegressor for regression tasks."
     ],
     "answer": 2,
-    "explanation": "在 sklearn 中使用 k-NN 做迴歸時，常用的評估指標是 MSE（均方誤差），它用來衡量模型預測值與實際值之間的數值偏差。\n\n選項解析：\n- A 錯誤：accuracy_score 是分類任務的評估指標，不適用於迴歸。\n- B 錯誤：k-NN regression 模型預測的是連續數值，而不是布林分類。\n- C 正確：MSE 是用來量化預測與實際目標之間數值差異的指標。\n- D 錯誤：KNeighborsClassifier 用於分類任務，而不是迴歸。"
+    "explanation": "在 sklearn 中使用 k-NN 做迴歸時，常用的評估指標是 MSE（均方誤差），它用來衡量模型預測值與實際值之間的數值偏差。\n\n選項解析：\n- A 錯誤：accuracy_score 是分類任務的評估指標，不適用於迴歸。\n- B 錯誤：k-NN regression 模型預測的是連續數值，而不是布林分類。\n- C 正確：MSE 是用來量化預測與實際目標之間數值差異的指標。\n- D 錯誤：KNeighborsClassifier 用於分類任務，而不是迴歸。",
+    "chapter": "Regression"
   },
   {
     "question": "In linear regression, why is a horizontal line placed at the mean of the data points often considered the 'best' line?",
@@ -630,7 +632,8 @@
       "It provides the simplest visualization without considering errors."
     ],
     "answer": 2,
-    "explanation": "在簡單線性回歸中，沒有任何斜率的假設下，將一條水平線放在平均值處，可以讓所有點的垂直距離平方總和（SSE）最小化，這是最佳線的數學定義。\n\n選項解析：\n- A 錯誤：目標是最小化 SSE，不是最大化。\n- B 錯誤：誤差可以是正的也可以是負的，這選項誤導。\n- C 正確：這條線讓點到線的垂直誤差平方總和最小，是最符合最佳線定義的。\n- D 錯誤：可視化不是重點，重點在於誤差最小。"
+    "explanation": "在簡單線性回歸中，沒有任何斜率的假設下，將一條水平線放在平均值處，可以讓所有點的垂直距離平方總和（SSE）最小化，這是最佳線的數學定義。\n\n選項解析：\n- A 錯誤：目標是最小化 SSE，不是最大化。\n- B 錯誤：誤差可以是正的也可以是負的，這選項誤導。\n- C 正確：這條線讓點到線的垂直誤差平方總和最小，是最符合最佳線定義的。\n- D 錯誤：可視化不是重點，重點在於誤差最小。",
+    "chapter": "Regression"
   },
   {
     "question": "When comparing different lines in linear regression, how is the 'best' tilted line typically selected?",
@@ -641,7 +644,8 @@
       "By choosing the line that always passes through the origin."
     ],
     "answer": 1,
-    "explanation": "在迴歸中選出最佳傾斜直線的方法，是選擇 SSE（誤差平方總和）最小的那一條，這是最小平方法（least squares）的核心原則。\n\n選項解析：\n- A 錯誤：我們想最小化誤差總和，而不是最大化。\n- B 正確：SSE 越小代表預測越準確。\n- C 錯誤：斜率為 0 就是水平線，這未必是最適合的線。\n- D 錯誤：通過原點沒有特別意義，反而可能讓模型失準。"
+    "explanation": "在迴歸中選出最佳傾斜直線的方法，是選擇 SSE（誤差平方總和）最小的那一條，這是最小平方法（least squares）的核心原則。\n\n選項解析：\n- A 錯誤：我們想最小化誤差總和，而不是最大化。\n- B 正確：SSE 越小代表預測越準確。\n- C 錯誤：斜率為 0 就是水平線，這未必是最適合的線。\n- D 錯誤：通過原點沒有特別意義，反而可能讓模型失準。",
+    "chapter": "Regression"
   },
   {
     "question": "In linear regression with multiple features, why do we use weights instead of a single slope?",
@@ -652,7 +656,8 @@
       "Because multiple features mean we must always use the same slope for every feature."
     ],
     "answer": 0,
-    "explanation": "多變數線性迴歸中，每個特徵對預測結果都有不同的貢獻，因此需要為每個特徵設置不同的權重（斜率），而不是用同一個。\n\n選項解析：\n- A 正確：這是線性迴歸的基本概念，每個變數都有各自的斜率。\n- B 錯誤：我們仍然使用數值特徵。\n- C 錯誤：使用權重不會自動消除預測誤差。\n- D 錯誤：每個特徵有不同的影響力，不能共用一個斜率。"
+    "explanation": "多變數線性迴歸中，每個特徵對預測結果都有不同的貢獻，因此需要為每個特徵設置不同的權重（斜率），而不是用同一個。\n\n選項解析：\n- A 正確：這是線性迴歸的基本概念，每個變數都有各自的斜率。\n- B 錯誤：我們仍然使用數值特徵。\n- C 錯誤：使用權重不會自動消除預測誤差。\n- D 錯誤：每個特徵有不同的影響力，不能共用一個斜率。",
+    "chapter": "Regression"
   },
   {
     "question": "According to the optimization strategies described, which of the following methods directly provides a mathematical shortcut to find the best solution for minimizing the sum of squared errors (SSE)?",
@@ -663,7 +668,8 @@
       "Calculated shortcut"
     ],
     "answer": 3,
-    "explanation": "計算捷徑（Calculated shortcut）指的是線性代數方法，如封閉解（Closed-form solution），可直接用數學公式快速計算最佳權重，而不需逐步優化。\n\n選項解析：\n- A 錯誤：隨機猜測太隨便，不會得出最佳解。\n- B 錯誤：隨機步伐是隨機搜尋，不精確。\n- C 錯誤：聰明步伐類似於梯度下降，但不是直接解。\n- D 正確：用數學捷徑可直接求出最小 SSE 解。"
+    "explanation": "計算捷徑（Calculated shortcut）指的是線性代數方法，如封閉解（Closed-form solution），可直接用數學公式快速計算最佳權重，而不需逐步優化。\n\n選項解析：\n- A 錯誤：隨機猜測太隨便，不會得出最佳解。\n- B 錯誤：隨機步伐是隨機搜尋，不精確。\n- C 錯誤：聰明步伐類似於梯度下降，但不是直接解。\n- D 正確：用數學捷徑可直接求出最小 SSE 解。",
+    "chapter": "Regression"
   },
   {
     "question": "Why is Root Mean Squared Error (RMSE) a useful evaluation metric in regression tasks?",
@@ -674,6 +680,7 @@
       "Because it identifies the total number of accurate predictions in a regression model."
     ],
     "answer": 2,
-    "explanation": "RMSE 是一個很實用的回歸評估指標，因為它的單位與原始資料相同（不像 MSE 是平方），可以清楚地看出預測值與實際值的平均偏差量，也能反映誤差的大小與方向。\n\n選項解析：\n- A 錯誤：這是說 MAE 或總誤差時可能會提到的性質，但 RMSE 是平方後開根號。\n- B 錯誤：這比較像是單純的總誤差，RMSE 有考慮誤差大小。\n- C 正確：RMSE 回到原始單位，讓誤差量更直觀可解釋。\n- D 錯誤：準確預測數量通常是分類任務的評估方式。"
+    "explanation": "RMSE 是一個很實用的回歸評估指標，因為它的單位與原始資料相同（不像 MSE 是平方），可以清楚地看出預測值與實際值的平均偏差量，也能反映誤差的大小與方向。\n\n選項解析：\n- A 錯誤：這是說 MAE 或總誤差時可能會提到的性質，但 RMSE 是平方後開根號。\n- B 錯誤：這比較像是單純的總誤差，RMSE 有考慮誤差大小。\n- C 正確：RMSE 回到原始單位，讓誤差量更直觀可解釋。\n- D 錯誤：準確預測數量通常是分類任務的評估方式。",
+    "chapter": "Regression"
   }
 ]
